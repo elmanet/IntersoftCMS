@@ -26,6 +26,12 @@ $productost = mysql_query($query_productost, $sistemai) or die(mysql_error());
 $row_productost = mysql_fetch_assoc($productost);
 $totalRows_productost = mysql_num_rows($productost);
 
+mysql_select_db($database_sistemai, $sistemai);
+$query_articuloblog = sprintf("SELECT * FROM sis_plantilla_articulos WHERE tipo_articulo=0");
+$articuloblog = mysql_query($query_articuloblog, $sistemai) or die(mysql_error());
+$row_articuloblog = mysql_fetch_assoc($articuloblog);
+$totalRows_articuloblog = mysql_num_rows($articuloblog);
+
 
 // FIN DE BUSQUEDAS SQL
 //HOJA DE MENU DE MODULOS 
@@ -281,6 +287,7 @@ $totalRows_productost = mysql_num_rows($productost);
                         </div>
                     </div>
                     <!-- search form -->
+                    <?php /*
                     <form action="#" method="get" class="sidebar-form">
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" placeholder="Buscar..."/>
@@ -289,6 +296,7 @@ $totalRows_productost = mysql_num_rows($productost);
                             </span>
                         </div>
                     </form>
+                    */ ?>
                     <!-- /.search form -->
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
@@ -297,11 +305,13 @@ $totalRows_productost = mysql_num_rows($productost);
                                 <i class="fa fa-home"></i> <span>Inicio</span>
                             </a>
                         </li>
+                        <?php /*
                         <li>
                             <a href="index.php?mod=nuevo-articulo-blog">
                                 <i class="fa fa-arrow-circle-up"></i> <span>Nuevo Articulo Blog</span> <small class="badge pull-right bg-red">nuevo</small>
                             </a>
                         </li>
+                        
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-folder-open"></i>
@@ -314,6 +324,8 @@ $totalRows_productost = mysql_num_rows($productost);
                                 
                             </ul>
                         </li>
+                        */ ?>
+
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-desktop"></i>
@@ -323,14 +335,15 @@ $totalRows_productost = mysql_num_rows($productost);
                             <ul class="treeview-menu">
                                 <li><a href="index.php?mod=gestor-modulos"><i class="fa fa-th-large"></i> Gestor de Módulos</a></li>
                                 <li><a href="index.php?mod=gestor-contenido"><i class="fa fa-book"></i> Contenido Web</a></li>
+                                <li><a href="index.php?mod=gestor-blog"><i class="fa fa-file-text-o"></i> Articulos Blog</a></li>
+                                <li><a href="index.php?mod=gestor-categoria-articulos"><i class="fa fa-list-alt"></i> Gestor de Categorias</a></li>
                                 <li><a href="index.php?mod=gestor-banner"><i class="fa fa-caret-square-o-right"></i> Gestor de Banners</a></li>
                                 <li><a href="index.php?mod=gestor-menu"><i class="fa fa-chain"></i> Gestor de Menú</a></li>
-                                <li><a href="#"><i class="fa fa-picture-o"></i> Gestor de Galerías</a></li>
-                                <li><a href="index.php?mod=gestor-multimedia"><i class="fa fa-camera-retro"></i> Gestor Multimedia</a></li>
-
-                                
+                                <?php /* <li><a href="#"><i class="fa fa-picture-o"></i> Gestor de Galerías</a></li> */ ?>
+                                <li><a href="index.php?mod=gestor-multimedia"><i class="fa fa-camera-retro"></i> Gestor Multimedia</a></li> 
                             </ul>
                         </li>
+
                         <?php if($row_config['tienda']==1) { //MOSTRAR SI ESTA ACTIVA TIENDA?>
                         <li class="treeview">
                             <a href="#">
@@ -353,20 +366,14 @@ $totalRows_productost = mysql_num_rows($productost);
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-user"></i>
-                                <span>Perfil</span>
+                                <span>Usuarios</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="#"><i class="fa fa-wrench"></i> Perfil</a></li>
+                               <?php /*  <li><a href="#"><i class="fa fa-wrench"></i> Perfil</a></li> */?>
                                 <li><a href="index.php?mod=gestor-usuarios"><i class="fa fa-envelope"></i> Gestor de Usuarios</a></li>
                                 <li><a href="#"><i class="fa fa-key"></i> Cambiar Contraseña</a></li>
                             </ul>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-envelope"></i> <span>Mensajes</span> <small class="badge pull-right bg-green">10</small>
-                            </a>
                         </li>
 
                         <li class="treeview">
@@ -439,25 +446,7 @@ $totalRows_productost = mysql_num_rows($productost);
                             </div>
                         </div><!-- ./col -->
                         <?php } ?>
-                        <div class="col-lg-3 col-xs-6">
-                            <!-- small box -->
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                    <h3>
-                                       0
-                                    </h3>
-                                    <p>
-                                        Mensajes de Clientes
-                                    </p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fa fa-envelope"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">
-                                    Ver Mensajes <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div><!-- ./col -->
+
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-yellow">
@@ -472,11 +461,36 @@ $totalRows_productost = mysql_num_rows($productost);
                                 <div class="icon">
                                     <i class="ion ion-person-add"></i>
                                 </div>
-                                <a href="index.php?mod=gestor-usuarios"  class="small-box-footer">
-                                    Ver Todos <i class="fa fa-arrow-circle-right"></i>
+                                <a href="index.php?mod=nuevo-usuario"  class="small-box-footer">
+                                    Nuevo Usuario <i class="fa fa-arrow-circle-right"></i>
                                 </a>
                             </div>
                         </div><!-- ./col -->
+
+
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-green">
+                                <div class="inner">
+                                    <h3>
+                                       <?php echo $totalRows_articuloblog; ?>
+                                    </h3>
+                                    <p>
+                                        Artículos Blog
+                                    </p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </div>
+                                <a href="index.php?mod=nuevo-articulo-blog" class="small-box-footer">
+                                    Nuevo Artículo <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div><!-- ./col -->
+
+
+
+
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-red">

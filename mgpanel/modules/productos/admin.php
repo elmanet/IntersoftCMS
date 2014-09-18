@@ -142,7 +142,7 @@ $totalRows_producto = mysql_num_rows($producto);
             $(function() {
                 $("#example1").dataTable();
                 $('#example2').dataTable({
-                    "bPaginate": true,
+                    "bPaginate": false,
                     "bLengthChange": true,
                     "bFilter": true,
                     "bSort": false,
