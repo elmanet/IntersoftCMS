@@ -2,7 +2,7 @@
 require_once('modules/inc/usuario.inc.php');
 
 mysql_select_db($database_sistemai, $sistemai);
-$query_categoria = "SELECT id, nombre_cate, des_cate, ruta, catep, status FROM sis_productos_categoria";
+$query_categoria = "SELECT id, nombre_cate, des_cate, ruta, catep, orden, status FROM sis_productos_categoria";
 $categoria = mysql_query($query_categoria, $sistemai) or die(mysql_error());
 $row_categoria = mysql_fetch_assoc($categoria);
 $totalRows_categoria = mysql_num_rows($categoria);
@@ -47,7 +47,8 @@ $totalRows_categoria = mysql_num_rows($categoria);
               <tr >
               <th><b>Nombre de la Categor&iacute;a</b></th>
               <th><b>Categor&iacute;a Superior</b></th>
-					    <th><b>Status</b></th>
+					    <th><b>Orden</b></th>
+              <th><b>Status</b></th>
               <th><b>Opciones</b></th>
               </tr>
              </thead>
@@ -71,6 +72,7 @@ $totalRows_categoria = mysql_num_rows($categoria);
                 } 
                ?>
              </td>
+             <td  height="26" align="center" ><?php echo $row_categoria['orden']; ?></td>
               <td  align="center" >
                 <?php if ($row_categoria['status']==0){ ?><span class="glyphicon glyphicon-thumbs-down" style="font-size:2em;"></span><?php }  ?>
                 <?php if ($row_categoria['status']==1){ ?><span class="glyphicon glyphicon-thumbs-up" style="font-size:2em;"></span><?php }  ?>
