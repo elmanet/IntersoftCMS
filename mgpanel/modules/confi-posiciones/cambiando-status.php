@@ -1,21 +1,31 @@
-<?php
+<?php ob_start();
+
 require_once('../inc/conexion_modules.inc.php'); 
-require_once('../inc/config.inc.php');
 
-$id=$_GET['id'];
+// CAMBIAR EL STATUS
+if ($_GET['status']==0){ 
+ $status=1;
+ }else {
+ $status=0;
+ }
 
-	
-	if($id>0) {
-		echo "<center><br><div class='tablaestilo'><table width='90%'><caption>Eliminando Posicion!</caption></table></center>";
+$insertSQL = sprintf("UPDATE sis_plantilla_posiciones SET status=%s WHERE id_pos=%s",  
+               
+                       GetSQLValueString($status, "int"),
+                       GetSQLValueString($_GET['id'], "int"));
+                       
+  mysql_select_db($database_sistemai, $sistemai);
+  $Result1 = mysql_query($insertSQL, $sistemai) or die(mysql_error());
 
-		$sql = "DELETE FROM sis_plantilla_posiciones WHERE id_pos=$id LIMIT 1"; 
-	       $res=mysql_query($sql,$sistemai);          
-  }else {
-  	echo "Error al Eliminar";
-  	}
-	
- // finalizamos el borrado	
-		?>
+
+// FIN DE CAMBIAR EL STATUS
+
+
+$return_loc = "index.php";
+//header("Location: ".$return_loc); 
+
+
+ob_end_flush(); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -30,7 +40,7 @@ $id=$_GET['id'];
 <center>
 <div class="box box-warning">
      <div class="box-header">
-            <h3 class="box-title">Eliminando Posición</h3>
+            <h3 class="box-title">Cambiando Status</h3>
      </div><!-- /.box-header -->
 <div class="box-body">
 <img src="images/gif/procesando.gif" alt="" ><br>

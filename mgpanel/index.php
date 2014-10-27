@@ -385,7 +385,7 @@ $totalRows_articuloblog = mysql_num_rows($articuloblog);
                             <ul class="treeview-menu">
                                 <li><a href="#" onclick="cargar('#divtest', 'modules/confi_tienda/modificar.php')"><i class="fa fa-gears"></i> Configuración Web</a></li>
                                 <?php if($row_usua['cod']==5) {?>
-                                <li><a href="#"><i class="fa fa-th"></i> Configurar Posiciones</a></li>
+                                <li><a href="index.php?mod=gestor-posiciones"><i class="fa fa-th"></i> Configurar Posiciones</a></li>
                                 <li><a href="#"><i class="fa fa-html5"></i> Editor Web</a></li>
                                 <?php } ?>
                             </ul>
@@ -526,6 +526,19 @@ if ($_GET['mod']=="modificar-usuario") {
     require_once('modules/usuarios/modificar.php');
 }
 /*FIN DE GESTOR DE USUARIOS*/?>
+
+<?php /* GESTOR DE POSICIONES */
+if ($_GET['mod']=="gestor-posiciones") { 
+    require_once('modules/confi-posiciones/admin.php');
+}
+if ($_GET['mod']=="nueva-posicion") { 
+    require_once('modules/confi-posiciones/nuevo.php');
+}
+if ($_GET['mod']=="modificar-posicion") { 
+    require_once('modules/confi-posiciones/modificar.php');
+}
+/*FIN DE GESTOR DE POSICIONES*/?>
+
 
 <?php /* GESTOR DE ARTICULOS BLOG */
 if ($_GET['mod']=="gestor-blog") { 

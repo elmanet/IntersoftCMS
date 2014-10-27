@@ -1,45 +1,14 @@
 <?php
-require_once('../inc/conexion_modules.inc.php'); 
-require_once('../inc/config.inc.php');
 
-// SQL PARA REGISTRO DE DATOS
-
-  
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "captchaform")) {
-
-   $updateSQL = sprintf("UPDATE sis_plantilla_posiciones SET cod_pos=%s, des_pos=%s, status=%s WHERE id_pos=%s",  
-							 
-							  GetSQLValueString($_POST['cod_pos'], "text"),
-							  GetSQLValueString($_POST['des_pos'], "text"),
-                       GetSQLValueString($_POST['status'], "int"),
-                       GetSQLValueString($_POST['id_pos'], "int"));
-                       
-  mysql_select_db($database_sistemai, $sistemai);
-  $Result1 = mysql_query($updateSQL, $sistemai) or die(mysql_error());
-
-  $updateGoTo = "admin.php";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
-    $updateGoTo .= $_SERVER['QUERY_STRING'];
-  }
-  header(sprintf("Location: %s", $updateGoTo));
-}
-
-$colname_categoria = "-1";
+$colname_modulos = "-1";
 if (isset($_GET['id'])) {
-  $colname_categoria = $_GET['id'];
+  $colname_modulos = $_GET['id'];
 }
 mysql_select_db($database_sistemai, $sistemai);
-$query_categoria = sprintf("SELECT * FROM sis_plantilla_posiciones WHERE id_pos=%s", GetSQLValueString($colname_categoria, "int"));
-$categoria = mysql_query($query_categoria, $sistemai) or die(mysql_error());
-$row_categoria = mysql_fetch_assoc($categoria);
-$totalRows_categoria = mysql_num_rows($categoria);
+$query_modulos = sprintf("SELECT * FROM sis_plantilla_posiciones WHERE id_pos=%s", GetSQLValueString($colname_modulos, "int"));
+$modulos = mysql_query($query_modulos, $sistemai) or die(mysql_error());
+$row_modulos = mysql_fetch_assoc($modulos);
+$totalRows_modulos = mysql_num_rows($modulos);
 
 
 ?>
@@ -47,114 +16,121 @@ $totalRows_categoria = mysql_num_rows($categoria);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html; utf-8" />
-<title><?php echo $row_config['title_site'];?></title>
-<link href="../../css/main_central.css" rel="stylesheet" type="text/css" />
-<link href="../../css/modules.css" rel="stylesheet" type="text/css" />
-<link href="../../css/input.css" rel="stylesheet" type="text/css">
-<link href="../../css/marca.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 
-<link rel="shortcut icon" href="../../images/favicon.ico">
-<script type="text/javascript" src="../../js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../../js/jconfirmaction.jquery.js"></script>
-		
+<script> 
+$(document).ready(function() {
+	$('#message').hide();
+	$('#msgerror').hide();
+	$("form").keypress(function(e) {
+        if (e.which == 13) {
+            return false;
+        }
+    });
+}); 
+$(function(){
+ $("#grabar").click(function(){
+ 	
+ 	if($("#cod_pos").val().length < 3) {  
+        $('#msgerror').show();
+        $("#msgerror p").html("<strong>Error!</strong> Debes tener un Codigo").show();
+      
+
+        return false;  
+    }  
+    
+    
+ var url = "modules/confi-posiciones/modificando.php"; // El script a dónde se realizará la petición.
+
+
+    $.ajax({
+
+         type: "POST",
+           url: url,
+           data: $("#captchaform").serialize(), // Adjuntar los campos del formulario enviado.
+
+           success: function(data) {
+           		$('#message').show();
+           		$('#msgerror').hide();
+            	
+                $("#message p").html("Guardado con Exito!").show();
+                
+                $('#captchaform').hide();
+
+                setTimeout(function() {
+              url = "index.php?mod=gestor-posiciones";
+              $(location).attr('href',url);
+              },1000);
+
+            }
+         });
  
+
+    return false; // Evitar ejecutar el submit del formulario.
+ });
+
+});
+
+
+</script>
 </head>
 
 <body>
 
 <center>
 <br>
-<div class="tablaestilo">
-<table summary="tabla" width="90%">
-<caption>Modificar Posici&oacute;n</caption>
-</table>
-</div>
-<!-- FORMULARIO MODIFICACION -->
+<div id="msgerror" class="alert alert-warning alert-dismissable" style="width:300px;position:absolute;z-index:10 !important;right:5px;">
+   <i class="fa fa-warning"></i><p></p></div>
 
- <form action="<?php echo $editFormAction; ?>"  id="captchaform" method="POST" enctype="multipart/form-data" target="_self" class="cmxform" >
-<table style="width:80%">
-<tr>
-<td>
+<!-- FORMULARIO REGISTRO NUEVO USUARIO -->
 
- 		<table>
- 		<tr>
+<div class="box box-warning">
+     <div class="box-header">
+            <h3 class="box-title">Modificar Posición</h3>
+     </div><!-- /.box-header -->
+<div class="box-body">
 
- 		</tr>
+<form   id="captchaform" method="POST"   enctype="multipart/form-data" >
+<table>
 
-		<table>
-		
-		<tr>
-			<td align="right" style="padding-top:0px;"><label> Cod de la Posici&oacute;n: </label></td>
+		<tr>	
 			<td>
-		  
-			<input class="text_input_peq" style="width:150px;" type="text" id="cod_pos" name="cod_pos" value="<?php echo $row_categoria['cod_pos'];?>" />
-		</td>
-			
-								
+			<div class="input-group">
+			<span class="input-group-addon"><i><strong class="fa fa-th-large"></strong></i></span>		
+			<input class="form-control" type="text" id="cod_pos" placeholder="Cod de la Posici&oacute;n" name="cod_pos" value="<?php echo $row_modulos['cod_pos'];?>" style="width:300px;" /></td>
+			</div>
+			</td>
 		</tr>
-		
-		<tr>
-			<td align="right" style="padding-top:0px;"><label> Nombre de la Posici&oacute;n: </label></td>
+
+		<tr>	
 			<td>
-		  
-			<input class="text_input_peq" style="width:300px;" type="text" id="des_pos" name="des_pos" value="<?php echo $row_categoria['des_pos'];?>" />
-		</td>
-			
-								
+			<div class="input-group">
+			<span class="input-group-addon"><i><strong class="fa fa-th-large"></strong></i></span>		
+			<input class="form-control" type="text" id="des_pos" placeholder="Nombre de la Posici&oacute;n" name="des_pos" value="<?php echo $row_modulos['des_pos'];?>" style="width:300px;" /></td>
+			</div>
+			</td>
 		</tr>
-				
+
+<tr><td>&nbsp;</td></tr>
+		<tr>
 	
-
-		
-		<tr>
-			<td align="right"><label> Status: </label></td>
-			<td>
-				<select name="status" id="status" class="text_input_peq">
-				 <option value="<?php echo $row_categoria['status'];?>">
-				   <?php if($row_categoria['status']==1) { echo "Activo"; }?>
-				   <?php if($row_categoria['status']==0) { echo "Desactivado"; }?>
-				   </option>
-             
-             <option value="0">Desactivado</option>
-             <option value="1">Activo</option>
-             
-             </select>		
-		</tr>	
-		<tr>
-		<td>&nbsp;</td>
-		<td><br><br><input type="submit" name="submit"  value="Modificar Categor&iacute;a" class="boton_guardar"  /><br>
-				
-		</td>		
+		<td colspan="2" align="center"><a href="index.php?mod=gestor-posiciones" class="btn btn-danger btn-lg"><i class="glyphicon glyphicon-remove"></i><span> Cancelar</span></a>	&nbsp;&nbsp;&nbsp;	 <a href="#" id="grabar" class="btn btn-primary btn-lg"><i class="fa fa-th-large"></i><span> Grabar Nuevo</span></a></td>
 		</tr>
-</table>
-
-</td>
-</tr>
-
  		</table>
 
-    <input type="hidden" name="id_pos" id="id_pos" value="<?php echo $row_categoria['id_pos'];?>">
-      
-     <input type="hidden" name="MM_update" value="captchaform">	
+
+    <input type="hidden" name="id_pos" id="id_pos" value="<?php echo $row_modulos['id_pos'];?>">
+
 </form>  
-<br /><br />
+<!-- FIN DE NUEVO INGRESO -->	
+<div id="message" class="alert alert-success alert-dismissable" style="width:300px;position:relative;z-index:10 !important;">
+   <i class="fa fa-check"></i><p></p></div>
 
 <!-- FIN DE CLIENTE NUEVO INGRESO -->	
+</div>
+</div>
 
 
 		
 </center>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />	
 </body>
-
 </html>
