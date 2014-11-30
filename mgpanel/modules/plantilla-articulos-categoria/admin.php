@@ -47,6 +47,7 @@ $totalRows_categoria = mysql_num_rows($categoria);
 				
         <thead>
               <tr >
+                <th><b>ID</b></th>
               <th ><b>T&iacute;tulo de la Categor&iacute;a</b></th>
               <th><b>Status</b></th>
               <th ><b>Opciones</b></th>
@@ -55,6 +56,7 @@ $totalRows_categoria = mysql_num_rows($categoria);
              
               <?php do { ?>
               <tr class="odd">
+                <td  height="26" align="center" ><?php echo $row_categoria['id_art_cate']; ?></td>
               <td  height="26" align="center" ><?php echo $row_categoria['descripcion']; ?></td>
              
               <td  align="center" >
